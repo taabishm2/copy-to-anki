@@ -1,6 +1,6 @@
 # copy-to-anki
 
-https://github.com/taabishm2/copy-to-anki/blob/main/demo.mp4
+![Demo](demo.gif)
 
 A browser extension that lets you highlight text on any web page and generate an Anki flashcard for it using ChatGPT (or manually).
 Requires Anki to be installed with the (AnkiConnect)[https://ankiweb.net/shared/info/2055492159] add-on installed
