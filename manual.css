@@ -1,0 +1,210 @@
+/* -------------- Manual Entry Overlay -------------- */
+
+/* dim the rest of the page */
+#manual-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    animation: fadeIn 0.25s ease forwards;
+}
+
+/* the white “card” container */
+#manual-box {
+    position: "relative";
+    background: #fff;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: var(--font, sans-serif);
+    color: var(--fg, #1f242a);
+
+}
+
+/* heading */
+#manual-heading {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+}
+
+/* textarea for the question */
+#manual-front-input {
+    width: 100%;
+    height: 100px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid var(--border, #dee2e6);
+    border-radius: 6px;
+    resize: vertical;
+    font-family: var(--font, sans-serif);
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease;
+}
+
+#manual-front-input:focus {
+    outline: none;
+    border-color: var(--accent, #ff6600);
+}
+
+/* button row */
+#manual-button-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* error box in manual-prompt */
+#manual-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: var(--error, #dc3545);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+#manual-error code {
+    display: block;
+    margin: 4px 0;
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+}
+
+#manual-error code {
+    display: block;
+    /* make it a block so max-width applies */
+    max-width: 100%;
+    /* never exceed the container */
+    white-space: pre-wrap;
+    /* respect line-breaks but wrap long lines */
+    word-break: break-word;
+    /* break long “words” anywhere */
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* fade-in keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+#manual-back-preview {
+    margin-top: 12px;
+    max-height: 150px;
+    overflow-y: auto;
+    background: rgba(242, 244, 248, 1);
+    border: 1px solid rgba(222, 226, 230, 1);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+
+#manual-back-preview .preview-label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: block;
+    color: var(--muted);
+}
+
+#manual-back-preview .preview-content {
+    /* allow the HTML to render, but constrain width */
+}
+
+/* -------------- Inputs -------------- */
+:root {
+    --bg: #f2f4f8;
+    --fg: #1f242a;
+    --muted: #6c757d;
+    --accent: #ff6600;
+    /* match toolbar icon */
+    --success: #28a745;
+    --error: #dc3545;
+    --warning: #ffc107;
+    --border: #dee2e6;
+    --radius: 8px;
+    --gap: 12px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --transition: 0.3s ease;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--gap);
+}
+
+label span {
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+
+/* primary “Save” button */
+.manual-button {
+    background: var(--accent, #ff6600);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.manual-button:hover {
+    background-color: #e55c00;
+}
+
+/* secondary “Enable GPT” button */
+.manual-button-secondary {
+    background: transparent;
+    color: var(--accent, #ff6600);
+    border: 1px solid var(--accent, #ff6600);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.manual-button-secondary:hover {
+    background-color: rgba(255, 102, 0, 0.1);
+}
