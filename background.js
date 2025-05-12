@@ -251,7 +251,7 @@ async function handleAction(tab, info) {
         ">
         <br>
         <hr>
-        Generate with <a href="">copy-to-anki</a> from:
+        Generated with <a href="">copy-to-anki</a> from:
         <a href="${pageUrl}"
         target="_blank"
         style="
