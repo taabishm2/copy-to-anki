@@ -109,28 +109,31 @@
     }
 }
 
-#manual-back-preview {
-    margin-top: 12px;
-    max-height: 150px;
+/* Editable back input field */
+#manual-back-input {
+    width: 100%;
+    min-height: 150px;
+    max-height: 250px;
     overflow-y: auto;
-    background: rgba(242, 244, 248, 1);
-    border: 1px solid rgba(222, 226, 230, 1);
-    border-radius: 4px;
     padding: 8px;
     font-size: 14px;
     line-height: 1.4;
-    margin-bottom: 20px;
+    border: 1px solid var(--border, #dee2e6);
+    border-radius: 6px;
+    background: #fff;
+    font-family: var(--font, sans-serif);
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease;
 }
 
-#manual-back-preview .preview-label {
-    font-weight: 500;
-    margin-bottom: 4px;
-    display: block;
-    color: var(--muted);
+#manual-back-input:focus {
+    outline: none;
+    border-color: var(--accent, #ff6600);
 }
 
-#manual-back-preview .preview-content {
-    /* allow the HTML to render, but constrain width */
+#manual-back-input:empty:before {
+    content: attr(placeholder);
+    color: #999;
 }
 
 /* -------------- Inputs -------------- */
