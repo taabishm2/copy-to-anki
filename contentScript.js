@@ -100,12 +100,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 border:1px solid #ccc;border-radius:4px;resize:vertical;"
             placeholder="Type your question here…"></textarea>
 
-        <!-- Preview of the selected text -->
-        <div id="manual-back-preview">
-            <label class="preview-label" style="color:#ff6600"><b>Back of the card:</b></label>
-            <hr>
-            <div class="preview-content">${msg.backHtml}</div>
-        </div>
+        <!-- Editable back field -->
+        <label for="manual-back-input" class="muted-text" 
+            style="display:block; font-size:12px; margin-bottom:4px; margin-top:12px;">
+            Back of the card:
+        </label>
+        <div id="manual-back-input" contenteditable="true"
+            style="width:100%;min-height:150px;max-height:250px;overflow-y:auto;
+                padding:8px;font-size:14px;border:1px solid #ccc;border-radius:4px;
+                background:#fff;">${msg.backHtml}</div>
 
         <div>
             ${modelNotice}
@@ -163,10 +166,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             if (!question) return;
 
             const selectedDeck = box.querySelector("#manual-deck").value;
+            const backInput = box.querySelector("#manual-back-input");
+            const editedBackHtml = backInput.innerHTML;
             chrome.runtime.sendMessage({
                 action: "manualSave",
                 front: question,
-                backHtml: msg.backHtml,
+                backHtml: editedBackHtml,
                 deckName: selectedDeck
             });
             overlay.remove();
