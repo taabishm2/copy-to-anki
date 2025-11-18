@@ -33,7 +33,9 @@ export async function generateFront(
                         role: "system",
                         content: `
                             You are an expert Anki flashcard creator. Given an HTML snippet that will appear on the back of a card, write one clear, concise question for the front that tests the snippet's single most important idea. 
-                            Ignore all HTML tags—use only the visible text. Output *only* the question. The following HTML snippet comes from a page titled "${pageTitle}" (${pageUrl})`,
+                            Ignore all HTML tags—use only the visible text. Output *only* the question. The following HTML snippet comes from a page titled "${pageTitle}" (${pageUrl})
+                            
+                            IMPORTANT: Write a standalone question appropriate for a flashcard's front side. Do NOT use phrases like "in the following text", "in the selected text", "according to the passage", or any references to the content being visible, since the answer content will be hidden until the user attempts to recall it. The question must make sense on its own without seeing the answer.`,
                     },
                     {
                         role: "user",
