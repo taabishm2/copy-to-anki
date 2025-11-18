@@ -1,15 +1,88 @@
 let toastEl = null;
 
+// Helper function to copy computed styles to inline styles
+function copyComputedStylesToInline(element) {
+    if (element.nodeType !== Node.ELEMENT_NODE) return;
+    
+    const computedStyle = window.getComputedStyle(element);
+    
+    // List of CSS properties to preserve for better formatting retention
+    const propertiesToPreserve = [
+        'color', 'background-color', 'font-weight', 'font-style', 
+        'font-size', 'font-family', 'text-decoration', 'text-decoration-line',
+        'text-decoration-color', 'text-decoration-style', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'vertical-align'
+    ];
+    
+    // Apply each property as inline style
+    propertiesToPreserve.forEach(prop => {
+        const value = computedStyle.getPropertyValue(prop);
+        if (value && value !== 'none' && value !== 'normal') {
+            // Skip transparent/default background colors to keep HTML cleaner
+            if (prop === 'background-color' && 
+                (value === 'rgba(0, 0, 0, 0)' || value === 'transparent')) {
+                return;
+            }
+            element.style.setProperty(prop, value, 'important');
+        }
+    });
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    // 1) Copy the selected text as HTML
+    // 1) Copy the selected text as HTML with preserved styling
     if (msg.action === "getSelectionHtml") {
         let html = "";
         const sel = window.getSelection();
         if (sel?.rangeCount) {
             const container = document.createElement("div");
+            
             for (let i = 0; i < sel.rangeCount; i++) {
-                container.appendChild(sel.getRangeAt(i).cloneContents());
+                const range = sel.getRangeAt(i);
+                
+                // First, apply computed styles to all elements in the selection IN PLACE
+                // This modifies the live DOM temporarily
+                const elementsInRange = [];
+                const walker = document.createTreeWalker(
+                    range.commonAncestorContainer,
+                    NodeFilter.SHOW_ELEMENT,
+                    {
+                        acceptNode: (node) => {
+                            // Accept only nodes that are fully or partially within the range
+                            if (range.intersectsNode(node)) {
+                                return NodeFilter.FILTER_ACCEPT;
+                            }
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                    }
+                );
+                
+                let node;
+                while (node = walker.nextNode()) {
+                    elementsInRange.push({
+                        element: node,
+                        originalStyle: node.getAttribute('style')
+                    });
+                }
+                
+                // Apply computed styles to elements
+                elementsInRange.forEach(item => {
+                    copyComputedStylesToInline(item.element);
+                });
+                
+                // Now clone the contents - they will have inline styles
+                const clonedContents = range.cloneContents();
+                container.appendChild(clonedContents);
+                
+                // Restore original styles
+                elementsInRange.forEach(item => {
+                    if (item.originalStyle) {
+                        item.element.setAttribute('style', item.originalStyle);
+                    } else {
+                        item.element.removeAttribute('style');
+                    }
+                });
             }
+            
             html = container.innerHTML;
         }
         sendResponse({ html });
