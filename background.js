@@ -251,7 +251,7 @@ async function handleAction(tab, info) {
         ">
         <br>
         <hr>
-        Generated with <a href="">copy-to-anki</a> from:
+        Generated with <a href="https://github.com/taabishm2/copy-to-anki">copy-to-anki</a> from:
         <a href="${pageUrl}"
         target="_blank"
         style="
