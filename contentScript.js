@@ -91,6 +91,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     // 2) Prompt user for card front when GPT is disabled
     if (msg.action === "askFrontInput") {
+        // Hide any pending toast notification
+        if (toastEl) {
+            toastEl.style.opacity = "0";
+            setTimeout(() => {
+                if (toastEl) {
+                    toastEl.remove();
+                    toastEl = null;
+                }
+            }, 300);
+        }
+
         // 1) Create overlay
         const overlay = document.createElement("div");
         overlay.id = "manual-overlay";
