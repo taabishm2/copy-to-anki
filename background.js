@@ -5,9 +5,12 @@ import { generateFront } from "./chatgptProvider.js";
 // --- Constants ---
 const CMD_SAVE = "save-to-anki";
 const ALARM_SYNC = "syncPending";
-const SYNC_DELAY = 0.1; // (6s)
+const ALARM_POLL = "pollForAnki";
+const SYNC_DELAY = 0.033; // ~2 seconds - reduced for faster sync attempts
+const POLL_INTERVAL = 0.5; // 30 seconds - periodic check for Anki availability when clips are pending
 
 let syncScheduled = false;
+let pollScheduled = false;
 
 // --- Helpers ---
 function notify(tabId, status, message) {
@@ -106,6 +109,7 @@ async function queueClip(clip) {
     await chrome.storage.local.set({ pendingClips });
     updateBadge();
     scheduleSync();
+    startPolling(); // Start periodic polling for Anki availability
 }
 
 // Simplified one-off sync scheduling
@@ -115,10 +119,27 @@ function scheduleSync() {
     chrome.alarms.create(ALARM_SYNC, { delayInMinutes: SYNC_DELAY });
 }
 
+// Start periodic polling for Anki availability when clips are pending
+function startPolling() {
+    if (pollScheduled) return;
+    pollScheduled = true;
+    chrome.alarms.create(ALARM_POLL, { delayInMinutes: POLL_INTERVAL, periodInMinutes: POLL_INTERVAL });
+}
+
+// Stop periodic polling when no clips are pending
+function stopPolling() {
+    if (!pollScheduled) return;
+    pollScheduled = false;
+    chrome.alarms.clear(ALARM_POLL);
+}
+
 // Flush queue
 async function flushQueue() {
     const { pendingClips = [] } = await chrome.storage.local.get({ pendingClips: [] });
-    if (!pendingClips.length) return;
+    if (!pendingClips.length) {
+        stopPolling(); // Stop polling when queue is empty
+        return;
+    }
 
     const remaining = [];
     for (const clip of pendingClips) {
@@ -131,7 +152,12 @@ async function flushQueue() {
     await chrome.storage.local.set({ pendingClips: remaining });
     updateBadge();
 
-    if (remaining.length) scheduleSync();
+    if (remaining.length) {
+        scheduleSync();
+        startPolling(); // Ensure polling continues
+    } else {
+        stopPolling(); // Stop polling when queue is empty
+    }
 }
 
 // --- Event Handlers ---
@@ -143,13 +169,17 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.runtime.getPlatformInfo(platform => {
         syncScheduled = false;
+        pollScheduled = false;
         updateBadge();
 
         const modKey = platform.os === "mac" ? "⌘" : "Ctrl";
         const title = `✏️ Save to Anki (${modKey}+Shift+H)`;
 
         chrome.storage.local.get({ pendingClips: [] }, ({ pendingClips }) => {
-            if (pendingClips.length) scheduleSync();
+            if (pendingClips.length) {
+                scheduleSync();
+                startPolling(); // Start polling on install if there are pending clips
+            }
         });
 
         // Rebuild context menu
@@ -165,11 +195,22 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.runtime.onStartup.addListener(() => {
     syncScheduled = false;
+    pollScheduled = false;
+    // Check if there are pending clips and start polling if needed
+    chrome.storage.local.get({ pendingClips: [] }, ({ pendingClips }) => {
+        if (pendingClips.length) {
+            scheduleSync();
+            startPolling();
+        }
+    });
 });
 
 chrome.alarms.onAlarm.addListener(alarm => {
     if (alarm.name === ALARM_SYNC) {
         syncScheduled = false;
+        flushQueue();
+    } else if (alarm.name === ALARM_POLL) {
+        // Periodic poll to check if Anki is available
         flushQueue();
     }
 });

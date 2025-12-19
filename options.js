@@ -284,6 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto-expand Anki section on successful connection
             toggleSection(ankiBody, ankiToggle, true);
 
+            // Trigger immediate sync if there are pending clips
+            const { pendingClips = [] } = await chrome.storage.local.get({ pendingClips: [] });
+            if (pendingClips.length > 0) {
+                chrome.runtime.sendMessage({ action: "flushQueue" }, () => {
+                    // Small delay to ensure storage is updated before reading
+                    setTimeout(() => updatePendingCards(), 100);
+                });
+            }
+
         } catch (err) {
             if (err.message.includes('Failed to fetch')) {
                 // Set disconnected status
