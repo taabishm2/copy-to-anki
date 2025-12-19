@@ -50,7 +50,8 @@ async function getSelectionHtml(tabId) {
                     container.appendChild(range.cloneContents());
                 }
                 
-                return container.innerHTML || container.textContent || "";
+                // Return HTML if available, otherwise plain text
+                return container.innerHTML || "";
             }
         });
         
