@@ -288,8 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const { pendingClips = [] } = await chrome.storage.local.get({ pendingClips: [] });
             if (pendingClips.length > 0) {
                 chrome.runtime.sendMessage({ action: "flushQueue" }, () => {
-                    // Update pending cards count after flush
-                    updatePendingCards();
+                    // Small delay to ensure storage is updated before reading
+                    setTimeout(() => updatePendingCards(), 100);
                 });
             }
 

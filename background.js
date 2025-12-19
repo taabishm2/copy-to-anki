@@ -6,8 +6,8 @@ import { generateFront } from "./chatgptProvider.js";
 const CMD_SAVE = "save-to-anki";
 const ALARM_SYNC = "syncPending";
 const ALARM_POLL = "pollForAnki";
-const SYNC_DELAY = 0.033; // (2s) - reduced for faster sync attempts
-const POLL_INTERVAL = 0.5; // (30s) - periodic check for Anki availability when clips are pending
+const SYNC_DELAY = 0.033; // (~2 seconds) - reduced for faster sync attempts
+const POLL_INTERVAL = 0.5; // (30 seconds) - periodic check for Anki availability when clips are pending
 
 let syncScheduled = false;
 let pollScheduled = false;
