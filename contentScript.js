@@ -169,9 +169,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         `;
 
         // 6) Source attribution (if page info is available)
+        const escapeHtml = (text) => {
+            return text.replace(/[<>"'&]/g, char => {
+                const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
+                return entities[char];
+            });
+        };
+        
         const sourceAttribution = (msg.pageTitle && msg.pageUrl) ? `
           <div class="muted-text" style="font-size:11px; margin-top:4px; margin-bottom:12px; padding:6px; background:#f8f9fa; border-radius:4px;">
-            Generated from: <a href="${msg.pageUrl}" target="_blank" style="color:#6c757d; text-decoration:none; border-bottom:1px dotted #6c757d;">${msg.pageTitle}</a>
+            Generated from: <a href="${escapeHtml(msg.pageUrl)}" target="_blank" style="color:#6c757d; text-decoration:none; border-bottom:1px dotted #6c757d;">${escapeHtml(msg.pageTitle)}</a>
           </div>
         ` : '';
 

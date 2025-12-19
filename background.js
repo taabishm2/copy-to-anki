@@ -39,7 +39,25 @@ async function getSettings() {
 }
 
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function appendSourceAttribution(html, pageTitle, pageUrl) {
+    // Note: pageUrl comes from tab.url which is already validated by the browser
+    // pageTitle comes from tab.title which is also browser-provided
+    // However, we still escape them for defense in depth
+    const escapedTitle = pageTitle.replace(/[<>"'&]/g, char => {
+        const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
+        return entities[char];
+    });
+    const escapedUrl = pageUrl.replace(/[<>"'&]/g, char => {
+        const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
+        return entities[char];
+    });
+    
     return `
     ${html}
     <div style="
@@ -50,14 +68,14 @@ function appendSourceAttribution(html, pageTitle, pageUrl) {
         <br>
         <hr>
         Generated with <a href="https://github.com/taabishm2/copy-to-anki">copy-to-anki</a> from:
-        <a href="${pageUrl}"
+        <a href="${escapedUrl}"
         target="_blank"
         style="
             color:#6c757d;
             text-decoration:none;
             border-bottom:1px dotted #6c757d;
         ">
-        ${pageTitle}
+        ${escapedTitle}
         </a>
     </div>
     `;
@@ -199,7 +217,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             } catch (err) {
                 const isOffline = err instanceof TypeError;
                 if (isOffline) {
-                    await queueClip({ front: msg.front, backHtml: msg.backHtml, ...settings });
+                    await queueClip({ front: msg.front, backHtml: backHtmlWithSource, ...settings });
                     updateBadge();
                     notify(sender.tab.id, "success", "Anki offline – saved locally");
                     sendResponse({ queued: true });
