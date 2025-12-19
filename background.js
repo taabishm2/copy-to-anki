@@ -17,13 +17,17 @@ function notify(tabId, status, message) {
 async function getSelectionHtml(tabId) {
     // First try the content script
     try {
-        const resp = await new Promise(resolve =>
-            chrome.tabs.sendMessage(tabId, { action: "getSelectionHtml" }, resp =>
-                resolve(resp)
-            )
-        );
+        const resp = await new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(tabId, { action: "getSelectionHtml" }, resp => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(resp);
+                }
+            });
+        });
         
-        if (resp?.html) {
+        if (resp?.html !== undefined) {
             return resp.html;
         }
     } catch (e) {
