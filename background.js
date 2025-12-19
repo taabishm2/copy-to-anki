@@ -50,7 +50,7 @@ async function getSelectionHtml(tabId) {
                     container.appendChild(range.cloneContents());
                 }
                 
-                // Return HTML if available, otherwise plain text
+                // Return HTML (note: this doesn't preserve computed styles like the content script does)
                 return container.innerHTML || "";
             }
         });
