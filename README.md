@@ -7,7 +7,7 @@ Requires Anki to be installed with the [AnkiConnect](https://ankiweb.net/shared/
 
 ## Features
 
-* **Right click or use shortcut**: Select text > right-click > "Save to Anki". Or simply select and `Ctrl+Shift+A` (Windows/Linux) / `⌘+Shift+K` (Mac).
+* **Right click or use shortcut**: Select text > right-click > "Save to Anki". Or simply select and `Ctrl+Shift+H` / `⌘+Shift+H`.
 * **Rich HTML capture**: Saved notes retain all links, formatting, latex, images and other features of the text selected from a web page.
 * **Auto generation**: If enabled, uses OpenAI API to craft concise questions for the front of the flashcard.
 * **Offline queue**: Notes created when Anki is closed are stored locally and automatically synced when AnkiConnect is available.
@@ -16,7 +16,7 @@ Requires Anki to be installed with the [AnkiConnect](https://ankiweb.net/shared/
 ## Usage
 
 1. Highlight text on any page.
-2. Right‑click and choose **Save to Anki** (or press `Ctrl+Shift+A` on Windows/Linux or `⌘+Shift+K` on Mac).
+2. Right‑click and choose **Save to Anki** (or press `Ctrl+Shift+H` / `⌘+Shift+H`).
 3. If ChatGPT integration is enabled, congrats, your flashcard is already saved!
 
 ## Configuration

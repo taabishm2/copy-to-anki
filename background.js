@@ -106,8 +106,7 @@ chrome.runtime.onInstalled.addListener(() => {
         updateBadge();
 
         const modKey = platform.os === "mac" ? "⌘" : "Ctrl";
-        const shortcutKey = platform.os === "mac" ? "K" : "A";  // mac → K, others → A
-        const title = `✏️ Save to Anki (${modKey}+Shift+${shortcutKey})`;
+        const title = `✏️ Save to Anki (${modKey}+Shift+H)`;
 
         chrome.storage.local.get({ pendingClips: [] }, ({ pendingClips }) => {
             if (pendingClips.length) scheduleSync();
