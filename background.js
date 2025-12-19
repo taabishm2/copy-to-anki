@@ -105,8 +105,8 @@ chrome.runtime.onInstalled.addListener(() => {
         syncScheduled = false;
         updateBadge();
 
-        const modKey = platform.os === "mac" ? "⌘" : "Ctrl";  // mac → Command, others → Ctrl :contentReference[oaicite:0]{index=0}
-        const title = `✏️ Save to Anki (${modKey}+Shift+K)`;
+        const modKey = platform.os === "mac" ? "⌘" : "Ctrl";
+        const title = `✏️ Save to Anki (${modKey}+Shift+H)`;
 
         chrome.storage.local.get({ pendingClips: [] }, ({ pendingClips }) => {
             if (pendingClips.length) scheduleSync();

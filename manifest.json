@@ -35,8 +35,8 @@
     "commands": {
         "save-to-anki": {
             "suggested_key": {
-                "default": "Ctrl+Shift+K",
-                "mac": "Command+Shift+K"
+                "default": "Ctrl+Shift+H",
+                "mac": "Command+Shift+H"
             },
             "description": "Save selection to Anki"
         }
