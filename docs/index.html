@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Copy to Anki — Turn highlights into Anki flashcards</title>
+    <meta name="description"
+        content="Copy to Anki is a fast browser extension that turns highlighted text into Anki flashcards (manual or AI-generated) with AnkiConnect." />
+
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+
+    <link rel="canonical" href="https://taabishm2.github.io/copy-to-anki/" />
+
+    <meta property="og:site_name" content="Copy to Anki" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Copy to Anki — Turn highlights into Anki flashcards" />
+    <meta property="og:description"
+        content="Highlight text → save to Anki. Supports rich HTML, offline queue, and optional AI question generation." />
+    <meta property="og:url" content="https://taabishm2.github.io/copy-to-anki/" />
+    <meta property="og:image" content="https://taabishm2.github.io/copy-to-anki/assets/og.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Copy to Anki — Turn highlights into Anki flashcards" />
+    <meta name="twitter:description"
+        content="A lightweight browser extension for creating Anki flashcards from highlighted text (manual or AI-generated)." />
+    <meta name="twitter:image" content="https://taabishm2.github.io/copy-to-anki/assets/og.png" />
+
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/icon16.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/icon64.png" />
+    <link rel="icon" type="image/png" sizes="128x128" href="./assets/icon128.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="./assets/icon128.png" />
+
+    <link rel="stylesheet" href="./style.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Copy to Anki",
+        "applicationCategory": "BrowserExtension",
+                "operatingSystem": "Chrome",
+                "description": "Browser extension that turns highlighted text into Anki flashcards using AnkiConnect, with optional AI question generation.",
+                "image": "https://taabishm2.github.io/copy-to-anki/assets/og.png",
+                "url": "https://taabishm2.github.io/copy-to-anki/",
+                "downloadUrl": "https://chromewebstore.google.com/detail/ohocgoincldighfbejbcnipmnpeppboa?utm_source=item-share-cb",
+                "sameAs": [
+                    "https://github.com/taabishm2/copy-to-anki",
+                    "https://chromewebstore.google.com/detail/ohocgoincldighfbejbcnipmnpeppboa"
+                ],
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "taabishm2"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD",
+                    "url": "https://chromewebstore.google.com/detail/ohocgoincldighfbejbcnipmnpeppboa"
+                },
+        "softwareVersion": "0.3.0"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does Copy to Anki do?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Copy to Anki lets you highlight text on any page and save it as an Anki flashcard. It can capture rich HTML (links, formatting, images) and can optionally generate a concise question for the card using an AI model."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need AnkiConnect?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. To send cards from your browser to Anki, you need Anki installed and the AnkiConnect add-on enabled."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "If Anki is closed, the extension can queue notes locally and sync them automatically when AnkiConnect becomes available again."
+            }
+          }
+        ]
+      }
+    </script>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="top">
+        <div class="wrap">
+            <div class="brand" aria-label="Copy to Anki">
+                <img class="logo" src="./assets/icon64.png" width="34" height="34" alt="" />
+                <span class="brandText">Copy to Anki</span>
+            </div>
+
+            <a class="btn"
+                href="https://chromewebstore.google.com/detail/ohocgoincldighfbejbcnipmnpeppboa?utm_source=item-share-cb"
+                rel="noopener" target="_blank" aria-label="Install Copy to Anki from the Chrome Web Store">
+                <img class="btnIconImg" src="https://cdn.simpleicons.org/googlechrome" width="18" height="18" alt="" />
+                Install on Chrome
+            </a>
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <section class="hero" aria-label="Product overview">
+            <div class="wrap heroGrid">
+                <div class="heroCopy">
+                    <h1>Turn highlights into Anki flashcards.</h1>
+                    <p class="sub">
+                        A lightweight browser extension for fast capture: highlight text on any web page, then save it
+                        to Anki
+                        (manual or AI-generated) via AnkiConnect.
+                    </p>
+
+                    <div class="ctaRow" id="install">
+                        <a class="btn"
+                            href="https://chromewebstore.google.com/detail/ohocgoincldighfbejbcnipmnpeppboa?utm_source=item-share-cb"
+                            rel="noopener" target="_blank" aria-label="Install Copy to Anki from the Chrome Web Store">
+                            <img class="btnIconImg" src="https://cdn.simpleicons.org/googlechrome" width="18"
+                                height="18" alt="" />
+                            Install on Chrome
+                        </a>
+                        <a class="btn btnGhost" href="https://github.com/taabishm2/copy-to-anki" rel="noopener"
+                            target="_blank">
+                            <svg class="btnIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="currentColor"
+                                    d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.77.6-3.36-1.18-3.36-1.18-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.89 1.53 2.34 1.09 2.91.83.09-.66.35-1.09.63-1.34-2.21-.25-4.54-1.11-4.54-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.55 9.55 0 0 1 12 6.84c.85 0 1.7.11 2.5.34 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.86v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z" />
+                            </svg>
+                            View on GitHub
+                        </a>
+                    </div>
+
+                    <div class="demoBox" aria-label="Demo preview">
+                        <img class="demo" src="./assets/demo.gif" alt="Copy to Anki demo" loading="lazy" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="section" aria-label="Workflow">
+            <div class="wrap">
+                <div class="flow" role="img"
+                    aria-label="Workflow: Select text, trigger save via right-click or Ctrl/Cmd+Shift+H, saved to Anki.">
+                    <div class="step">
+                        <svg class="stepIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M7 2h10a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-4.3l-2.1 2.1a1 1 0 0 1-1.7-.7V18H7a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3.9a1 1 0 0 1 1 1v1.2l1.2-1.2a1 1 0 0 1 .7-.3H17a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H7Z" />
+                            <path fill="currentColor"
+                                d="M9 7h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2Zm0 4h4a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2Z" />
+                        </svg>
+                        Select text
+                    </div>
+                    <div class="arrow" aria-hidden="true">→</div>
+
+                    <div class="branch" aria-label="Two ways to trigger save">
+                        <div class="step">
+                            <svg class="stepIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="currentColor"
+                                    d="M12 2a7 7 0 0 1 7 7v6a7 7 0 1 1-14 0V9a7 7 0 0 1 7-7Zm0 2a5 5 0 0 0-5 5v6a5 5 0 0 0 10 0V9a5 5 0 0 0-5-5Z" />
+                                <path fill="currentColor" d="M11 7a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V7Z" />
+                            </svg>
+                            Right-click → Save
+                        </div>
+                        <div class="or" aria-hidden="true">OR</div>
+                        <div class="step">
+                            <svg class="stepIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path fill="currentColor"
+                                    d="M6 7a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-4a3 3 0 0 0-3-3H6Zm0 2h12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1Z" />
+                                <path fill="currentColor"
+                                    d="M7 11a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H7Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H10Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H13Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H16Z" />
+                            </svg>
+                            Ctrl/Cmd + Shift + H
+                        </div>
+                    </div>
+
+                    <div class="arrow" aria-hidden="true">→</div>
+                    <div class="step">
+                        <svg class="stepIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor"
+                                d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Z" />
+                            <path fill="currentColor"
+                                d="M16.3 9.3a1 1 0 0 1 0 1.4l-4.6 4.6a1 1 0 0 1-1.4 0l-2.6-2.6a1 1 0 1 1 1.4-1.4l1.9 1.9 3.9-3.9a1 1 0 0 1 1.4 0Z" />
+                        </svg>
+                        Saved to Anki
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section" aria-label="Frequently asked questions">
+            <div class="wrap">
+                <h2>FAQ</h2>
+
+                <details>
+                    <summary>Is Copy to Anki free?</summary>
+                    <p>Manual card creation is free. If you enable auto-generating questions, you’ll need an OpenAI API
+                        key and an OpenAI account with credits/billing enabled.</p>
+                </details>
+
+                <details>
+                    <summary>What data does it store?</summary>
+                    <p>
+                        Copy to Anki stores your settings (like deck/model choices) and any queued notes locally in your
+                        browser.
+                        To add cards it talks to AnkiConnect on your machine (localhost). If you enable AI question
+                        generation,
+                        the selected text is sent to OpenAI.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>Will it work on any website?</summary>
+                    <p>It works on most pages; complex sites may require manual tweaks.</p>
+                </details>
+            </div>
+        </section>
+
+
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="muted">
+                © <span id="y"></span> Copy to Anki. <a href="https://github.com/taabishm2/copy-to-anki">GitHub</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("y").textContent = String(new Date().getFullYear());
+    </script>
+</body>
+
+</html>

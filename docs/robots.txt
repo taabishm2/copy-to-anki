@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taabishm2.github.io/copy-to-anki/sitemap.xml
