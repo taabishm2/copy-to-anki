@@ -38,6 +38,30 @@ async function getSettings() {
     );
 }
 
+
+function appendSourceAttribution(html, pageTitle, pageUrl) {
+    return `
+    ${html}
+    <div style="
+        font-size:12px;
+        color:#6c757d;
+        margin-top:8px;
+        ">
+        <br>
+        <hr>
+        Generated with <a href="https://github.com/taabishm2/copy-to-anki">copy-to-anki</a> from:
+        <a href="${pageUrl}"
+        target="_blank"
+        style="
+            color:#6c757d;
+            text-decoration:none;
+            border-bottom:1px dotted #6c757d;
+        ">
+        ${pageTitle}
+        </a>
+    </div>
+    `;
+}
 async function updateBadge() {
     const { pendingClips = [] } = await chrome.storage.local.get({ pendingClips: [] });
     const count = pendingClips.length;
@@ -164,8 +188,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === "manualSave") {
         (async () => {
             const settings = await getSettings();
+            // Append source attribution if pageTitle and pageUrl are provided
+            const backHtmlWithSource = (msg.pageTitle && msg.pageUrl)
+                ? appendSourceAttribution(msg.backHtml, msg.pageTitle, msg.pageUrl)
+                : msg.backHtml;
             try {
-                await addToAnki(msg.front, msg.backHtml, msg.deckName, settings.modelName);
+                await addToAnki(msg.front, backHtmlWithSource, msg.deckName, settings.modelName);
                 notify(sender.tab.id, "success", "Saved to Anki!");
                 sendResponse({ success: true });
             } catch (err) {
@@ -245,34 +273,14 @@ async function handleAction(tab, info) {
         // ignore — deckList stays []
     }
 
-    const backWithSource = `
-    ${rawHtml}
-    <div style="
-        font-size:12px;
-        color:#6c757d;
-        margin-top:8px;
-        ">
-        <br>
-        <hr>
-        Generated with <a href="https://github.com/taabishm2/copy-to-anki">copy-to-anki</a> from:
-        <a href="${pageUrl}"
-        target="_blank"
-        style="
-            color:#6c757d;
-            text-decoration:none;
-            border-bottom:1px dotted #6c757d;
-        ">
-        ${pageTitle}
-        </a>
-    </div>
-    `;
-
     // 1) If GPT is disabled, always open the manual prompt
     if (!settings.gptEnabled) {
         chrome.tabs.sendMessage(tab.id, {
             action: "askFrontInput",
-            backHtml: backWithSource,
+            backHtml: rawHtml,
             frontHtml: "",
+            pageTitle: pageTitle,
+            pageUrl: pageUrl,
             deckName: settings.deckName,
             deckList: deckList,
             ankiOnline: ankiOnline,
@@ -288,8 +296,10 @@ async function handleAction(tab, info) {
         // → show manual prompt with error, include ankiOnline
         chrome.tabs.sendMessage(tab.id, {
             action: "askFrontInput",
-            backHtml: backWithSource,
+            backHtml: rawHtml,
             frontHtml: "",
+            pageTitle: pageTitle,
+            pageUrl: pageUrl,
             error: gptErr.message,
             deckName: settings.deckName,
             deckList: deckList,
@@ -303,8 +313,10 @@ async function handleAction(tab, info) {
         // → show manual prompt pre-filled with generated question
         chrome.tabs.sendMessage(tab.id, {
             action: "askFrontInput",
-            backHtml: backWithSource,
+            backHtml: rawHtml,
             frontHtml: front,
+            pageTitle: pageTitle,
+            pageUrl: pageUrl,
             deckName: settings.deckName,
             deckList: deckList,
             ankiOnline: ankiOnline
@@ -314,6 +326,7 @@ async function handleAction(tab, info) {
 
     // 3) Confirm-off: auto-save immediately
     notify(tab.id, "pending", "Saving to Anki…");
+    const backWithSource = appendSourceAttribution(rawHtml, pageTitle, pageUrl);
     try {
         await addToAnki(front, backWithSource, settings.deckName, settings.modelName);
         notify(tab.id, "success", "Saved to Anki!");
