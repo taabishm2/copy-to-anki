@@ -39,24 +39,19 @@ async function getSettings() {
 }
 
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 function appendSourceAttribution(html, pageTitle, pageUrl) {
     // Note: pageUrl comes from tab.url which is already validated by the browser
     // pageTitle comes from tab.title which is also browser-provided
     // However, we still escape them for defense in depth
-    const escapedTitle = pageTitle.replace(/[<>"'&]/g, char => {
-        const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
-        return entities[char];
-    });
-    const escapedUrl = pageUrl.replace(/[<>"'&]/g, char => {
-        const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
-        return entities[char];
-    });
+    const escapeHtml = (text) => {
+        return text.replace(/[<>"'&]/g, char => {
+            const entities = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' };
+            return entities[char];
+        });
+    };
+    
+    const escapedTitle = escapeHtml(pageTitle);
+    const escapedUrl = escapeHtml(pageUrl);
     
     return `
     ${html}
