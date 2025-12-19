@@ -15,11 +15,51 @@ function notify(tabId, status, message) {
 }
 
 async function getSelectionHtml(tabId) {
-    return new Promise(resolve =>
-        chrome.tabs.sendMessage(tabId, { action: "getSelectionHtml" }, resp =>
-            resolve(resp?.html || "")
-        )
-    );
+    // First try the content script
+    try {
+        const resp = await new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(tabId, { action: "getSelectionHtml" }, resp => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(resp);
+                }
+            });
+        });
+        
+        if (resp?.html !== undefined) {
+            return resp.html;
+        }
+    } catch (e) {
+        console.log("Content script message failed, trying scripting API:", e);
+    }
+    
+    // Fallback for PDFs and other contexts where content scripts don't work
+    try {
+        const results = await chrome.scripting.executeScript({
+            target: { tabId },
+            func: () => {
+                const sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) {
+                    return "";
+                }
+                
+                const container = document.createElement("div");
+                for (let i = 0; i < sel.rangeCount; i++) {
+                    const range = sel.getRangeAt(i);
+                    container.appendChild(range.cloneContents());
+                }
+                
+                // Return HTML (note: this doesn't preserve computed styles like the content script does)
+                return container.innerHTML || "";
+            }
+        });
+        
+        return results?.[0]?.result || "";
+    } catch (e) {
+        console.error("Failed to get selection:", e);
+        return "";
+    }
 }
 
 async function getSettings() {
