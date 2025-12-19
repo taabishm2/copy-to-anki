@@ -220,6 +220,9 @@ async function handleAction(tab, info) {
     const pageTitle = tab.title || "";
     const pageUrl = tab.url || info.pageUrl || "";
 
+    // Show "generating" message immediately before any async operations
+    notify(tab.id, "pending", "Generating flashcard…");
+
     const settings = await getSettings();
     const rawHtml = await getSelectionHtml(tab.id);
 
@@ -278,7 +281,6 @@ async function handleAction(tab, info) {
     }
 
     // 2) GPT is enabled — try to generate
-    notify(tab.id, "pending", "Generating flashcard…");
     let front;
     try {
         front = await generateFront(rawHtml, settings.gptModel, pageTitle, pageUrl);
