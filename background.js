@@ -385,7 +385,7 @@ async function handleAction(tab, info) {
     // 2) GPT is enabled — try to generate
     let front;
     try {
-        front = await generateFront(rawHtml, settings.gptModel, pageTitle, pageUrl);
+        front = await generateFront(rawHtml, pageTitle, pageUrl);
     } catch (gptErr) {
         // → show manual prompt with error, include ankiOnline
         chrome.tabs.sendMessage(tab.id, {
